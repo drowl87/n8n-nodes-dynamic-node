@@ -4,7 +4,7 @@ import {
   INodeType,
   INodeTypeDescription,
   NodeOperationError,
-  NodeConnectionType,
+  NodeConnectionTypes,
 } from 'n8n-workflow';
 import { v4 as uuidv4 } from 'uuid';
 import subWorkflowTemplate from './subWorkflowTemplate.json';
@@ -18,8 +18,8 @@ export class DynamicNode implements INodeType {
     version: 1,
     description: 'Dynamically execute any node JSON within your workflow',
     defaults: { name: 'Dynamic Node' },
-    inputs: ['main'] as NodeConnectionType[],
-    outputs: ['main'] as NodeConnectionType[],
+    inputs: [NodeConnectionTypes.Main],
+    outputs: [NodeConnectionTypes.Main],
     properties: [
       {
         displayName: 'Node JSON',
@@ -78,7 +78,7 @@ export class DynamicNode implements INodeType {
 
     const template = JSON.parse(JSON.stringify(subWorkflowTemplate));
     template.nodes.push(nodeJson);
-    template.connections.Start.main[0][0].node = nodeJson.name;
+    template.connections['Execute Workflow Trigger'].main[0][0].node = nodeJson.name;
 
     const workflowProxy = this.getWorkflowDataProxy(0);
 

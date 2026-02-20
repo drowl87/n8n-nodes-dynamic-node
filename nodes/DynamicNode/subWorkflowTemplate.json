@@ -4,14 +4,14 @@
     {
       "parameters": {},
       "id": "start-subworkflow-node",
-      "name": "Start",
-      "type": "n8n-nodes-base.start",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1,
       "position": [0, 0]
     }
   ],
   "connections": {
-    "Start": {
+    "Execute Workflow Trigger": {
       "main": [
         [
           {
