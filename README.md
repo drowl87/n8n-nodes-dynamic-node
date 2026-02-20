@@ -6,11 +6,18 @@
 
 ---
 
+## Compatibility
+
+| n8n version | Package version |
+|-------------|-----------------|
+| v1.x        | <= 0.3.7        |
+| v2.x        | >= 0.3.8        |
+
 ## Installation
 
 ### Community Nodes (Recommended)
 
-For users on n8n v0.187+, your instance owner can install this node from [Community Nodes](https://docs.n8n.io/integrations/community-nodes/installation/).
+Your instance owner can install this node from [Community Nodes](https://docs.n8n.io/integrations/community-nodes/installation/).
 
 1. Go to **Settings > Community Nodes**.
 2. Select **Install**.
@@ -110,7 +117,7 @@ For Docker-based deployments, add the following line before the font installatio
 
 4. **Click *Test step***. The node will:
 
-   * Clone an internal **Start → YOUR NODE** mini‑workflow.
+   * Clone an internal **Execute Workflow Trigger → YOUR NODE** mini‑workflow.
    * Evaluate any `{{…}}` expressions (`$json`, etc.).
    * Execute the underlying node with your credentials and input items.
    * Return its output as the `Dynamic Node`’s own output.
