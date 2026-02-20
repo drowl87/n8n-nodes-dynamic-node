@@ -11,20 +11,40 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    # Required for npm Trusted Publisher (OIDC)
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Node 24+ ships with npm 11.5.1+ which is required for OIDC trusted publishing
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: '24'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Publish to npm
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Build (sanity check)
+        run: npm run build
+
+      # Guardrail: fail fast if version already exists on npm
+      - name: Ensure version not already published
+        run: |
+          PKG_NAME=$(node -p "require('./package.json').name")
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if npm view "$PKG_NAME@$PKG_VERSION" version >/dev/null 2>&1; then
+            echo "Version already published: $PKG_NAME@$PKG_VERSION"
+            exit 1
+          else
+            echo "Version not yet published — proceeding."
+          fi
+
+      - name: Publish to npm (Trusted Publisher via OIDC)
+        run: npm publish --provenance --access public
